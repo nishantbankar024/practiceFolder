@@ -1,0 +1,63 @@
+package com.example.demo.implservice;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.User;
+import com.example.demo.excepption.ResourceNotFoundException;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
+
+@Service
+public class UserImplService implements UserService{
+
+	@Autowired
+	public UserRepository userRepo;
+	
+//	@Autowired
+	public User user;
+
+	@Override
+	public User createUser(User user) {
+		// TODO Auto-generated method stub
+		String s=UUID.randomUUID().toString();
+		user.setUserId(s);
+		return userRepo.save(user);
+	}
+
+	@Override
+	public User getSingleUser(String userId) {
+		// TODO Auto-generated method stub
+		return userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("resource not found exception:"+userId));
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		return userRepo.findAll();
+	}
+
+	@Override
+	public User updateUser(String userId) {
+		// TODO Auto-generated method stub
+		if(user.getUserId().equals(userId)) {
+			user.setName(user.getName());
+			user.setEmail(user.getEmail());
+			user.setAbout(user.getAbout());
+		}else {
+			System.out.println("invalid User Id :");
+		}
+		return user;
+	}
+
+	@Override
+	public User deleteUser(String userId) {
+		// TODO Auto-generated method stub
+		userRepo.deleteById(userId);
+		return user;
+	}
+
+}
